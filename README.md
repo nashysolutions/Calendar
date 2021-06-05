@@ -49,3 +49,7 @@ Tap the following image to launch [Appetize](https://appetize.io).
         <img src="https://user-images.githubusercontent.com/51816980/59961554-2f0d7e80-94d1-11e9-83a6-98160bfa19a9.png" alt="Appetize"/>
    </a>
 </p>
+
+## Installation
+
+List this package in your `Package.swift` manifest file as a [Swift Package](https://swift.org/package-manager/) dependency. [Releases Page](https://github.com/nashysolutions/Calendar/releases).
