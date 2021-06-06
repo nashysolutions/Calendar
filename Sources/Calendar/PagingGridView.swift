@@ -12,9 +12,9 @@ public class PagingGridView: UICollectionView {
         model.totalMonths
     }
     
-//    public var currentSelection: Day? {
-//        return model.currentSelection
-//    }
+    public var currentSelection: Day? {
+        return model.currentSelection
+    }
     
     public var canPageToPrevious: Bool {
         return model.canPageToPrevious

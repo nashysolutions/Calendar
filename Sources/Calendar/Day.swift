@@ -19,9 +19,7 @@ public final class Day {
     let membership: Month.Membership
     
     lazy var name = Day.Name(date: date)
-    
-    public var selected = false
-    
+        
     init(date: Date, membership: Month.Membership, calendar: Calendar) {
         self.date = date
         self.membership = membership

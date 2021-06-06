@@ -6,6 +6,8 @@ final class PagingGridViewModel: NSObject {
     private let endDate: Date
     private let calendar: Calendar
     
+    var currentSelection: Day?
+    
     private weak var currentMonthTitleView: TitleUserInterface?
     
     weak var collectionView: UICollectionView?
@@ -62,19 +64,7 @@ final class PagingGridViewModel: NSObject {
         }
         return currentPage + 1
     }
-    
-//    var currentSelection: Day? {
-//        let predicate: (Day) -> Bool = { day in
-//            return day.selected
-//        }
-//        for month in months {
-//            if let day = month.days.first(where: predicate) {
-//                return day
-//            }
-//        }
-//        return nil
-//    }
-    
+        
     private func dayIsSelectable(day: Day) -> Bool {
         if let selection = day.membership.selection {
             if case .withinRange = selection {
@@ -83,14 +73,6 @@ final class PagingGridViewModel: NSObject {
         }
         return false
     }
-    
-//    private func resetSelections() {
-//        months.forEach { (month) in
-//            month.days.forEach({ (day) in
-//                day.selected = false
-//            })
-//        }
-//    }
     
     var totalMonths: Int {
         let from = startDate.startOfMonth()
@@ -196,9 +178,8 @@ extension PagingGridViewModel: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let month = month(at: indexPath.section)
         let day = month.days[indexPath.item]
-//        resetSelections()
         if dayIsSelectable(day: day) == true {
-            day.selected = true
+            currentSelection = day
             if case .previous = day.membership {
                 didSelectSpacerDay(day, at: indexPath, in: collectionView)
             } else if case .next = day.membership {
