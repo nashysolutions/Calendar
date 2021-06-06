@@ -139,10 +139,10 @@ final class PagingGridViewLayout: UICollectionViewLayout {
         guard let collectionView = collectionView as? PagingGridView else {
             preconditionFailure()
         }
-        let months = collectionView.months
-        let columns = months.count * daysPerWeek
+        let totalMonths = collectionView.totalMonths
+        let columns = totalMonths * daysPerWeek
         var mostRows: Int = 0
-        for section in 0..<months.count {
+        for section in 0..<totalMonths {
             let rows = totalRows(forSection: section)
             if rows > mostRows {
                 mostRows = rows

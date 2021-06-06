@@ -8,6 +8,10 @@ public class PagingGridView: UICollectionView {
         return model.months
     }
     
+    var totalMonths: Int {
+        model.totalMonths
+    }
+    
 //    public var currentSelection: Day? {
 //        return model.currentSelection
 //    }

@@ -53,7 +53,7 @@ final class PagingGridViewModel: NSObject {
     
     var canPageToNext: Bool {
         let page = currentPage + 1
-        return page < months.count
+        return page < totalMonths
     }
     
     var nextPage: Int? {
@@ -92,9 +92,16 @@ final class PagingGridViewModel: NSObject {
 //        }
 //    }
     
+    var totalMonths: Int {
+        let from = startDate.startOfMonth()
+        let to = endDate.startOfMonth()
+        let components = calendar.dateComponents([.month], from: from, to: to)
+        return components.month! + 1
+    }
+    
     var months: [Month] {
         var collector = [Month]()
-        var counter = calendar.dateComponents([.month], from: startDate.startOfMonth(), to: endDate.startOfMonth()).month!
+        var counter = totalMonths
         var date = startDate
         collector.append(Month(date: date, dataSource: self, calendar: calendar))
         counter -= 1
@@ -148,7 +155,7 @@ extension PagingGridViewModel: MonthDataSource {
 extension PagingGridViewModel: UICollectionViewDataSource {
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return months.count
+        totalMonths
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
