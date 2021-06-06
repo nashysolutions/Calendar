@@ -39,7 +39,6 @@ final class PagingGridViewModel: NSObject {
         self.calendar = calendar
     }
     
-    
     var canPageToPrevious: Bool {
         let page = currentPage - 1
         return page >= 0
@@ -64,17 +63,17 @@ final class PagingGridViewModel: NSObject {
         return currentPage + 1
     }
     
-    var currentSelection: Day? {
-        let predicate: (Day) -> Bool = { day in
-            return day.selected
-        }
-        for month in months {
-            if let day = month.days.first(where: predicate) {
-                return day
-            }
-        }
-        return nil
-    }
+//    var currentSelection: Day? {
+//        let predicate: (Day) -> Bool = { day in
+//            return day.selected
+//        }
+//        for month in months {
+//            if let day = month.days.first(where: predicate) {
+//                return day
+//            }
+//        }
+//        return nil
+//    }
     
     private func dayIsSelectable(day: Day) -> Bool {
         if let selection = day.membership.selection {
@@ -85,13 +84,13 @@ final class PagingGridViewModel: NSObject {
         return false
     }
     
-    private func resetSelections() {
-        months.forEach { (month) in
-            month.days.forEach({ (day) in
-                day.selected = false
-            })
-        }
-    }
+//    private func resetSelections() {
+//        months.forEach { (month) in
+//            month.days.forEach({ (day) in
+//                day.selected = false
+//            })
+//        }
+//    }
     
     var months: [Month] {
         var collector = [Month]()
@@ -196,7 +195,7 @@ extension PagingGridViewModel: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let month = months[indexPath.section]
         let day = month.days[indexPath.item]
-        resetSelections()
+//        resetSelections()
         if dayIsSelectable(day: day) == true {
             day.selected = true
             if case .previous = day.membership {
