@@ -216,6 +216,28 @@ final class CalendarTests: XCTestCase {
         }
     }
     
+    func testLazyLoading() throws {
+        
+        let calendar = Foundation.Calendar.current
+        
+        let startDate = Date.distantPast
+        let endDate = Date.distantFuture
+        
+        let dayTypes: [DayUserInterfaceCandidate] = DayPosition.allCases.compactMap { position in
+            SummerSnowflake.userInterface(for: position)
+        }
+        let titleTypes = TitlePosition.allCases.map { SummerSnowflake.userInterface(for: $0) }
+        let userInterface = UserInterface(dayTypes: dayTypes, titleTypes: titleTypes)
+        
+        _ = try PagingGridView(
+            dates: startDate...endDate,
+            userInterface: userInterface,
+            calendar: calendar
+        )
+        
+        // do we get this far without hanging?
+    }
+    
     func testUserInterfaceMultipleForDayPositions1() {
         
         let calendar = Foundation.Calendar.current
