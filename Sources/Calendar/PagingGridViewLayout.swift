@@ -68,7 +68,7 @@ final class PagingGridViewLayout: UICollectionViewLayout {
         guard let collectionView = collectionView as? PagingGridView else {
             preconditionFailure()
         }
-        let month = collectionView.months[section]
+        let month = collectionView.month(at: section)
         let count = month.days.count
         let item = row * daysPerWeek + (column % daysPerWeek)
         if item < count {
@@ -82,8 +82,7 @@ final class PagingGridViewLayout: UICollectionViewLayout {
             preconditionFailure()
         }
         let section = Int(floor(CGFloat(column) / CGFloat(daysPerWeek)))
-        let month = collectionView.months
-        return min(month.count - 1, section)
+        return min(collectionView.totalMonths - 1, section)
     }
     
     private func indexPathsOfSupplementaryViewsInRect(in rect: CGRect) -> [IndexPath] {
@@ -107,7 +106,7 @@ final class PagingGridViewLayout: UICollectionViewLayout {
         guard let collectionView = collectionView as? PagingGridView else {
             preconditionFailure()
         }
-        let month = collectionView.months[section]
+        let month = collectionView.month(at: section)
         let items: Int = month.days.count
         let rows: CGFloat = CGFloat(items) / CGFloat(daysPerWeek)
         return Int(ceil(rows))

@@ -13,7 +13,7 @@ final class PagingGridViewModel: NSObject {
     private var currentPage: Int = 0
     
     private func updateTitleView() {
-        let month = months[currentPage]
+        let month = month(at: currentPage)
         let title = month.title
         currentMonthTitleView?.update(with: title)
     }
@@ -27,7 +27,7 @@ final class PagingGridViewModel: NSObject {
         guard startDate.compare(date) == .orderedAscending || date.compare(endDate) == .orderedAscending else {
             return nil
         }
-        if let page = calendar.dateComponents([.month], from: startDate.startOfMonth(), to: date.startOfMonth()).month, page < months.count {
+        if let page = calendar.dateComponents([.month], from: startDate.startOfMonth(), to: date.startOfMonth()).month, page < totalMonths {
             return page
         }
         return nil
@@ -99,18 +99,12 @@ final class PagingGridViewModel: NSObject {
         return components.month! + 1
     }
     
-    var months: [Month] {
-        var collector = [Month]()
-        var counter = totalMonths
-        var date = startDate
-        collector.append(Month(date: date, dataSource: self, calendar: calendar))
-        counter -= 1
-        while (counter >= 0) {
-            date = calendar.date(byAdding: DateComponents(month: 1), to: date)!
-            collector.append(Month(date: date, dataSource: self, calendar: calendar))
-            counter -= 1
+    func month(at index: Int) -> Month {
+        if index == 0 {
+            return Month(date: startDate, dataSource: self, calendar: calendar)
         }
-        return collector
+        let date = calendar.date(byAdding: DateComponents(month: index), to: startDate)!
+        return Month(date: date, dataSource: self, calendar: calendar)
     }
     
     private func establishCurrentPage(_ scrollView: UIScrollView) -> Int {
@@ -159,12 +153,12 @@ extension PagingGridViewModel: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        let month = months[section]
+        let month = month(at: section)
         return month.days.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let month = months[indexPath.section]
+        let month = month(at: indexPath.section)
         let day = month.days[indexPath.item]
         let position = DayPosition.position(for: day)
         let identifier = position.identifier
@@ -179,12 +173,12 @@ extension PagingGridViewModel: UICollectionViewDataSource {
         guard kind == UICollectionView.elementKindSectionHeader else {
             fatalError("Unexpected reusable view")
         }
-        let firstMonth = months.first!
         if indexPath.item == 0 {
             guard let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: TitlePosition.month.identifier, for: indexPath) as? TitleUserInterface else {
                 fatalError("Unexpected reusable view")
             }
-            view.update(with: firstMonth.title)
+            let month = month(at: indexPath.section)
+            view.update(with: month.title)
             currentMonthTitleView = view
             return view as UICollectionReusableView
         }
@@ -200,7 +194,7 @@ extension PagingGridViewModel: UICollectionViewDataSource {
 extension PagingGridViewModel: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let month = months[indexPath.section]
+        let month = month(at: indexPath.section)
         let day = month.days[indexPath.item]
 //        resetSelections()
         if dayIsSelectable(day: day) == true {
@@ -223,7 +217,7 @@ extension PagingGridViewModel: UICollectionViewDelegate {
             shift = 1
         }
         let section = indexPath.section + shift
-        let month = months[section]
+        let month = month(at: section)
         guard let d = month.days.first(where: { $0 == day }), let item = month.days.firstIndex(of: d) else {
             return
         }

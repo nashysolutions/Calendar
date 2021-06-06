@@ -4,8 +4,8 @@ public class PagingGridView: UICollectionView {
     
     private let model: PagingGridViewModel
     
-    var months: [Month] {
-        return model.months
+    func month(at index: Int) -> Month {
+        model.month(at: index)
     }
     
     var totalMonths: Int {
