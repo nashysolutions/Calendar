@@ -42,6 +42,8 @@ let date = calendarView.currentSelection?.date
 
 ## Demo
 
+A demo App is available [here](https://github.com/nashysolutions/Dates).
+
 Tap the following image to launch [Appetize](https://appetize.io).
 
 <p align="center">
