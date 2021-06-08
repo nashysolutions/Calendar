@@ -35,7 +35,7 @@ final class PagingGridViewModel: NSObject, MonthDataSource {
         return nil
     }
     
-    private var longestMonth: Int = 0
+    private var longestMonth: Month!
     
     init(dates: Dates, calendar: Calendar) {
         self.startDate = dates.startDate
@@ -46,11 +46,13 @@ final class PagingGridViewModel: NSObject, MonthDataSource {
     }
     
     private func establishLongestMonth() {
-        longestMonth = calendar.range(of: .day, in: .month, for: startDate)!.count
+        longestMonth = Month(date: startDate, dataSource: self, calendar: calendar)
+        var longest = calendar.range(of: .day, in: .month, for: startDate)!.count
         var index = 1
-        while longestMonth < 31 {
+        while longest < 31 {
             if let date = calendar.date(byAdding: DateComponents(month: index), to: startDate), date.compare(endDate) == .orderedAscending {
-                longestMonth = calendar.range(of: .day, in: .month, for: date)!.count
+                longest = calendar.range(of: .day, in: .month, for: date)!.count
+                longestMonth = Month(date: date, dataSource: self, calendar: calendar)
             } else {
                 break
             }
@@ -126,7 +128,7 @@ final class PagingGridViewModel: NSObject, MonthDataSource {
 
 extension PagingGridViewModel: PagingGridViewLayoutDataSource {
     
-    func pagingGridViewLayoutLongestMonth(_ layout: PagingGridViewLayout) -> Int {
+    func pagingGridViewLayoutLongestMonth(_ layout: PagingGridViewLayout) -> Month {
         longestMonth
     }
 }

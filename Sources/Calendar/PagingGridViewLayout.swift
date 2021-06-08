@@ -1,7 +1,7 @@
 import UIKit
 
 protocol PagingGridViewLayoutDataSource: AnyObject {
-    func pagingGridViewLayoutLongestMonth(_ layout: PagingGridViewLayout) -> Int
+    func pagingGridViewLayoutLongestMonth(_ layout: PagingGridViewLayout) -> Month
 }
 
 final class PagingGridViewLayout: UICollectionViewLayout {
@@ -150,8 +150,8 @@ final class PagingGridViewLayout: UICollectionViewLayout {
         }
         let totalMonths = collectionView.totalMonths
         let columns = totalMonths * daysPerWeek
-        let days = dataSource?.pagingGridViewLayoutLongestMonth(self) ?? 0
-        let mostRows = totalRows(for: days)
+        let month = dataSource!.pagingGridViewLayoutLongestMonth(self)
+        let mostRows = totalRows(for: month.days.count)
         let width = (CGFloat(columns) * cellWidth) - (insets.left + insets.right)
         let height = (CGFloat(mostRows) * cellHeight) - (insets.top + insets.bottom) + monthHeaderHeight + dayHeaderHeight
         return CGSize(width: width, height: height)
