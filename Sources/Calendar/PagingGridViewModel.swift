@@ -1,9 +1,9 @@
 import UIKit
 
-final class PagingGridViewModel: NSObject {
+final class PagingGridViewModel: NSObject, MonthDataSource {
     
-    private let startDate: Date
-    private let endDate: Date
+    let startDate: Date
+    let endDate: Date
     private let calendar: Calendar
     
     var currentSelection: Day?
@@ -35,10 +35,27 @@ final class PagingGridViewModel: NSObject {
         return nil
     }
     
+    private var longestMonth: Int = 0
+    
     init(dates: Dates, calendar: Calendar) {
         self.startDate = dates.startDate
         self.endDate = dates.endDate
         self.calendar = calendar
+        super.init()
+        establishLongestMonth()
+    }
+    
+    private func establishLongestMonth() {
+        longestMonth = calendar.range(of: .day, in: .month, for: startDate)!.count
+        var index = 1
+        while longestMonth < 31 {
+            if let date = calendar.date(byAdding: DateComponents(month: index), to: startDate), date.compare(endDate) == .orderedAscending {
+                longestMonth = calendar.range(of: .day, in: .month, for: date)!.count
+            } else {
+                break
+            }
+            index += 1
+        }
     }
     
     var canPageToPrevious: Bool {
@@ -107,24 +124,10 @@ final class PagingGridViewModel: NSObject {
     }
 }
 
-extension PagingGridViewModel: MonthDataSource {
+extension PagingGridViewModel: PagingGridViewLayoutDataSource {
     
-    func selection(for date: Date) -> CalendarSelection {
-        switch date.compare(startDate) {
-        case .orderedAscending:
-            return .outsideRange
-        case .orderedDescending:
-            switch date.compare(endDate) {
-            case .orderedAscending:
-                return .withinRange
-            case .orderedDescending:
-                return .outsideRange
-            case .orderedSame:
-                return .withinRange
-            }
-        case .orderedSame:
-            return .withinRange
-        }
+    func pagingGridViewLayoutLongestMonth(_ layout: PagingGridViewLayout) -> Int {
+        longestMonth
     }
 }
 

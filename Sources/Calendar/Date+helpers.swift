@@ -18,7 +18,6 @@ extension Date {
     }
     
     func startOfMonth(_ calendar: Foundation.Calendar = .current) -> Date {
-        let components = calendar.dateComponents([.year, .month], from: self)
-        return calendar.date(from: components)!
+        calendar.dateInterval(of: .month, for: self)!.start
     }
 }

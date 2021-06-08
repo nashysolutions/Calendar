@@ -34,6 +34,7 @@ public class PagingGridView: UICollectionView {
         model = PagingGridViewModel(dates: dates, calendar: calendar)
         
         let layout = PagingGridViewLayout(userInterface: userInterface)
+        layout.dataSource = model
         
         super.init(frame: .zero, collectionViewLayout: layout)
         

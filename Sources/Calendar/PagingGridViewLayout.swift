@@ -1,6 +1,12 @@
 import UIKit
 
+protocol PagingGridViewLayoutDataSource: AnyObject {
+    func pagingGridViewLayoutLongestMonth(_ layout: PagingGridViewLayout) -> Int
+}
+
 final class PagingGridViewLayout: UICollectionViewLayout {
+    
+    weak var dataSource: PagingGridViewLayoutDataSource?
     
     private let padding: CGFloat
     private let dayHeaderHeight: CGFloat
@@ -107,8 +113,12 @@ final class PagingGridViewLayout: UICollectionViewLayout {
             preconditionFailure()
         }
         let month = collectionView.month(at: section)
-        let items: Int = month.days.count
-        let rows: CGFloat = CGFloat(items) / CGFloat(daysPerWeek)
+        let days = month.days.count
+        return totalRows(for: days)
+    }
+    
+    private func totalRows(for days: Int) -> Int {
+        let rows: CGFloat = CGFloat(days) / CGFloat(daysPerWeek)
         return Int(ceil(rows))
     }
     
@@ -140,13 +150,8 @@ final class PagingGridViewLayout: UICollectionViewLayout {
         }
         let totalMonths = collectionView.totalMonths
         let columns = totalMonths * daysPerWeek
-        var mostRows: Int = 0
-        for section in 0..<totalMonths {
-            let rows = totalRows(forSection: section)
-            if rows > mostRows {
-                mostRows = rows
-            }
-        }
+        let days = dataSource?.pagingGridViewLayoutLongestMonth(self) ?? 0
+        let mostRows = totalRows(for: days)
         let width = (CGFloat(columns) * cellWidth) - (insets.left + insets.right)
         let height = (CGFloat(mostRows) * cellHeight) - (insets.top + insets.bottom) + monthHeaderHeight + dayHeaderHeight
         return CGSize(width: width, height: height)

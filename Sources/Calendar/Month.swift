@@ -1,7 +1,28 @@
 import Foundation
 
-protocol MonthDataSource: AnyObject {
+protocol MonthDataSource: Specification, AnyObject {
     func selection(for date: Date) -> CalendarSelection
+}
+
+extension MonthDataSource where Self: Specification {
+    
+    func selection(for date: Date) -> CalendarSelection {
+        switch date.compare(startDate) {
+        case .orderedAscending:
+            return .outsideRange
+        case .orderedDescending:
+            switch date.compare(endDate) {
+            case .orderedAscending:
+                return .withinRange
+            case .orderedDescending:
+                return .outsideRange
+            case .orderedSame:
+                return .withinRange
+            }
+        case .orderedSame:
+            return .withinRange
+        }
+    }
 }
 
 final class Month {
@@ -107,16 +128,7 @@ extension Month {
         case none
         
         var selection: CalendarSelection? {
-            switch self {
-            case .current(let selection):
-                return selection
-            case .previous(let selection):
-                return selection
-            case .next(let selection):
-                return selection
-            case .none:
-                return nil
-            }
+            Mirror(reflecting: self).children.first?.value as? CalendarSelection
         }
     }
 }
