@@ -26,8 +26,7 @@ public class PagingGridView: UICollectionView {
     
     public init(dates: ClosedRange<Date>, userInterface: UserInterface, calendar: Calendar = .current) throws {
         
-        let dates = Dates(range: dates)
-        try dates.validate(calendar: calendar)
+        let dates = try Dates(range: dates, calendar: calendar)
         
         try userInterface.validate()
         
