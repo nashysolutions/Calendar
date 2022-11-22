@@ -24,8 +24,8 @@ extension UICollectionView {
     func register(_ dayTypes: [DayUserInterfaceCandidate]) {
         for dayType in dayTypes {
             let userInterface = dayType.view
-            let position = dayType.position
-            register(userInterface as UICollectionViewCell.Type, forCellWithReuseIdentifier: position.identifier)
+            let identifier = dayType.dayButtonState.rawValue
+            register(userInterface as UICollectionViewCell.Type, forCellWithReuseIdentifier: identifier)
         }
     }
 }
@@ -34,12 +34,12 @@ extension Array where Element == DayUserInterfaceCandidate {
     
     func validate() throws {
         let counts = reduce(into: [:]) { accumulation, dayType in
-            accumulation[dayType.position, default: 0] += 1
+            accumulation[dayType.dayButtonState, default: 0] += 1
         }
-        for position in DayPosition.allCases {
-            let frequency = counts[position]
+        for state in DayButtonState.allCases {
+            let frequency = counts[state]
             if frequency == nil || frequency == 0 {
-                throw UserInterface.Error.missingDayType(at: position)
+                throw UserInterface.Error.missingDayType(for: state)
             } else if frequency! > 1 {
                 throw UserInterface.Error.multipleDayTypes
             }

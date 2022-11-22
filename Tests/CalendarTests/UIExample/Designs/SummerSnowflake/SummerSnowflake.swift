@@ -10,9 +10,9 @@ struct SummerSnowflake {
     static let black = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
     static let shade = black.withAlphaComponent(0.1)
     
-    static func userInterface(for position: DayPosition) -> DayUserInterfaceCandidate {
+    static func userInterface(for dayButtonState: DayButtonState) -> DayUserInterfaceCandidate {
         let userInterface: DayUserInterface.Type
-        switch position {
+        switch dayButtonState {
         case .invisible:
             userInterface = InvisibleSpacerDayCell.self
         case .disabled:
@@ -22,7 +22,7 @@ struct SummerSnowflake {
         case .normal:
             userInterface = SummerSnowflakeDayCell.self
         }
-        return DayUserInterfaceCandidate(position: position, view: userInterface)
+        return DayUserInterfaceCandidate(dayButtonState: dayButtonState, view: userInterface)
     }
     
     static func userInterface(for position: TitlePosition) -> TitleUserInterfaceCandidate {

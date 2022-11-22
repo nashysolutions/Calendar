@@ -2,11 +2,11 @@ import Foundation
 
 public struct DayUserInterfaceCandidate {
     
-    let position: DayPosition
+    let dayButtonState: DayButtonState
     let view: DayUserInterface.Type
     
-    public init(position: DayPosition, view: DayUserInterface.Type) {
-        self.position = position
+    public init(dayButtonState: DayButtonState, view: DayUserInterface.Type) {
+        self.dayButtonState = dayButtonState
         self.view = view
     }
 }

@@ -1,6 +1,6 @@
 import UIKit
 
-final class PagingGridViewModel: NSObject, MonthDataSource {
+final class PagingGridViewModel: NSObject, DateRangeSource {
     
     let startDate: Date
     let endDate: Date
@@ -85,12 +85,7 @@ final class PagingGridViewModel: NSObject, MonthDataSource {
     }
         
     private func dayIsSelectable(day: Day) -> Bool {
-        if let selection = day.membership.selection {
-            if case .withinRange = selection {
-                return true
-            }
-        }
-        return false
+        day.monthMembership.isWithinRange
     }
     
     var totalMonths: Int {
@@ -147,8 +142,7 @@ extension PagingGridViewModel: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let month = month(at: indexPath.section)
         let day = month.days[indexPath.item]
-        let position = DayPosition.position(for: day)
-        let identifier = position.identifier
+        let identifier = day.state.rawValue
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: identifier, for: indexPath) as? DayUserInterface else {
             fatalError()
         }
@@ -183,11 +177,11 @@ extension PagingGridViewModel: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let month = month(at: indexPath.section)
         let day = month.days[indexPath.item]
-        if dayIsSelectable(day: day) == true {
+        if dayIsSelectable(day: day) {
             currentSelection = day
-            if case .previous = day.membership {
+            if case .previous = day.monthMembership {
                 didSelectSpacerDay(day, at: indexPath, in: collectionView)
-            } else if case .next = day.membership {
+            } else if case .next = day.monthMembership {
                 didSelectSpacerDay(day, at: indexPath, in: collectionView)
             }
         } else {
@@ -197,7 +191,7 @@ extension PagingGridViewModel: UICollectionViewDelegate {
     
     private func didSelectSpacerDay(_ day: Day, at indexPath: IndexPath, in collectionView: UICollectionView) {
         let shift: Int
-        if case .previous = day.membership {
+        if case .previous = day.monthMembership {
             shift = -1
         } else {
             shift = 1

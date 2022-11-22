@@ -28,8 +28,7 @@ final class DatesTests: XCTestCase {
             return XCTFail()
         }
         
-        XCTAssertThrowsError(try Dates(range: startDate...endDate).validate(calendar: calendar)
-        ) { (error) in
+        XCTAssertThrowsError(try Dates(range: startDate...endDate, calendar: calendar) ) { (error) in
             let expecting = Dates.Error.minimumGranularity
             XCTAssertEqual(error as? Dates.Error, expecting)
         }
@@ -62,8 +61,7 @@ final class DatesTests: XCTestCase {
         
         let adjustedEndDate = calendar.date(byAdding: DateComponents(hour: -1), to: endDate)!
         
-        XCTAssertThrowsError(try Dates(range: startDate...adjustedEndDate).validate(calendar: calendar)
-        ) { (error) in
+        XCTAssertThrowsError(try Dates(range: startDate...adjustedEndDate, calendar: calendar)) { (error) in
             let expecting = Dates.Error.minimumGranularity
             XCTAssertEqual(error as? Dates.Error, expecting)
             XCTAssertTrue(Utility.errorContainsSuitableInformation(error))
@@ -95,6 +93,6 @@ final class DatesTests: XCTestCase {
             return XCTFail()
         }
         
-        XCTAssertNoThrow(try Dates(range: startDate...endDate).validate(calendar: calendar))
+        XCTAssertNoThrow(try Dates(range: startDate...endDate, calendar: calendar))
     }
 }

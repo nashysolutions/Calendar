@@ -3,7 +3,7 @@ import UIKit
 public struct UserInterface {
     
     public enum Error: Swift.Error {
-        case missingDayType(at: DayPosition)
+        case missingDayType(for: DayButtonState)
         case multipleDayTypes
         case missingTitleType(at: TitlePosition)
         case multipleTitleTypes

@@ -1,43 +1,18 @@
 import Foundation
 
-protocol MonthDataSource: Specification, AnyObject {
-    func selection(for date: Date) -> CalendarSelection
-}
-
-extension MonthDataSource where Self: Specification {
-    
-    func selection(for date: Date) -> CalendarSelection {
-        switch date.compare(startDate) {
-        case .orderedAscending:
-            return .outsideRange
-        case .orderedDescending:
-            switch date.compare(endDate) {
-            case .orderedAscending:
-                return .withinRange
-            case .orderedDescending:
-                return .outsideRange
-            case .orderedSame:
-                return .withinRange
-            }
-        case .orderedSame:
-            return .withinRange
-        }
-    }
-}
-
 final class Month {
     
     let date: Date
     
     private let calendar: Calendar
     
-    private unowned let dataSource: MonthDataSource
+    private unowned let dataSource: DateRangeSource
     
     lazy var title: String = {
         return Month.dateFormatter.string(from: date)
     }()
     
-    init(date: Date, dataSource: MonthDataSource, calendar: Calendar) {
+    init(date: Date, dataSource: DateRangeSource, calendar: Calendar) {
         self.date = date
         self.dataSource = dataSource
         self.calendar = calendar
@@ -63,8 +38,8 @@ final class Month {
         let components = calendar.dateComponents([.year, .month], from: date)
         for day in (1...range.count) {
             let date = Date(year: components.year!, month: components.month!, day: day, calendar)
-            let selection = dataSource.selection(for: date)
-            let day = Day(date: date, membership: .current(selection), calendar: calendar)
+            let isEligible = dataSource.isDateWithinValidRange(date)
+            let day = Day(date: date, membership: .current(isEligible), calendar: calendar)
             days.append(day)
         }
         return days
@@ -80,15 +55,15 @@ final class Month {
             var components = calendar.dateComponents([.year, .month, .day], from: previousMonth)
             components.day = range.count
             let date = calendar.date(from: components)!
-            let selection = dataSource.selection(for: date)
-            let day = Day(date: date, membership: .previous(selection), calendar: calendar)
+            let eligible = dataSource.isDateWithinValidRange(date)
+            let day = Day(date: date, membership: .previous(eligible), calendar: calendar)
             leadingDays.append(day)
             leadingDaysCount -= 1
             for _ in (0..<leadingDaysCount) {
                 components.day! -= 1
                 let date = calendar.date(from: components)!
-                let selection = dataSource.selection(for: date)
-                let day = Day(date: date, membership: .previous(selection), calendar: calendar)
+                let isWithinRange = dataSource.isDateWithinValidRange(date)
+                let day = Day(date: date, membership: .previous(isWithinRange), calendar: calendar)
                 leadingDays.append(day)
             }
         }
@@ -104,15 +79,15 @@ final class Month {
             var components = calendar.dateComponents([.year, .month, .day], from: nextMonth)
             components.day = 1
             let date = calendar.date(from: components)!
-            let selection = dataSource.selection(for: date)
-            let day = Day(date: date, membership: .next(selection), calendar: calendar)
+            let isWithinRange = dataSource.isDateWithinValidRange(date)
+            let day = Day(date: date, membership: .next(isWithinRange), calendar: calendar)
             trailingDays.append(day)
             trailingDaysCount -= 1
             for _ in (0..<trailingDaysCount) {
                 components.day! += 1
                 let date = calendar.date(from: components)!
-                let selection = dataSource.selection(for: date)
-                let day = Day(date: date, membership: .next(selection), calendar: calendar)
+                let isWithinRange = dataSource.isDateWithinValidRange(date)
+                let day = Day(date: date, membership: .next(isWithinRange), calendar: calendar)
                 trailingDays.append(day)
             }
         }
@@ -121,14 +96,19 @@ final class Month {
 }
 
 extension Month {
+    
+    /// The source of the day in question, i.e. is the day a member of this month or not.
+    /// The boolean associated type explains that the date may not be a member of the eligible date range.
     enum Membership {
-        case current(CalendarSelection)
-        case previous(CalendarSelection)
-        case next(CalendarSelection)
-        case none
         
-        var selection: CalendarSelection? {
-            Mirror(reflecting: self).children.first?.value as? CalendarSelection
+        case current(Bool)
+        case previous(Bool)
+        case next(Bool)
+        
+        /// An elgible date range is one that is within the current month AND within the users selected date range (see `DateRangeSource.swift`).
+        var isWithinRange: Bool {
+            let children = Mirror(reflecting: self).children
+            return children.first!.value as! Bool
         }
     }
 }

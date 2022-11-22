@@ -20,7 +20,7 @@ final class DayTests: XCTestCase {
         let calendar = Calendar.current
         let date = Date(year: 2019, month: 4, day: 22, calendar)
         XCTAssertEqual(Day.Name(date: date), Day.Name.monday)
-        let day = Day(date: date, membership: .current(.withinRange), calendar: calendar)
+        let day = Day(date: date, membership: .current(true), calendar: calendar)
         checkCalendarUnit(day, calendar)
         checkAccessibilityIdentifier(day, calendar)
     }
@@ -42,7 +42,7 @@ final class DayTests: XCTestCase {
         let calendar = Calendar.current
         let date = Date(year: 2019, month: 4, day: 23, calendar)
         XCTAssertEqual(Day.Name(date: date), Day.Name.tuesday)
-        let day = Day(date: date, membership: .current(.withinRange), calendar: calendar)
+        let day = Day(date: date, membership: .current(true), calendar: calendar)
         checkCalendarUnit(day, calendar)
         checkAccessibilityIdentifier(day, calendar)
     }
@@ -64,7 +64,7 @@ final class DayTests: XCTestCase {
         let calendar = Calendar.current
         let date = Date(year: 2019, month: 4, day: 24, calendar)
         XCTAssertEqual(Day.Name(date: date), Day.Name.wednesday)
-        let day = Day(date: date, membership: .current(.withinRange), calendar: calendar)
+        let day = Day(date: date, membership: .current(true), calendar: calendar)
         checkCalendarUnit(day, calendar)
         checkAccessibilityIdentifier(day, calendar)
     }
@@ -86,7 +86,7 @@ final class DayTests: XCTestCase {
         let calendar = Calendar.current
         let date = Date(year: 2019, month: 4, day: 25, calendar)
         XCTAssertEqual(Day.Name(date: date), Day.Name.thursday)
-        let day = Day(date: date, membership: .current(.withinRange), calendar: calendar)
+        let day = Day(date: date, membership: .current(true), calendar: calendar)
         checkCalendarUnit(day, calendar)
         checkAccessibilityIdentifier(day, calendar)
     }
@@ -108,7 +108,7 @@ final class DayTests: XCTestCase {
         let calendar = Calendar.current
         let date = Date(year: 2019, month: 4, day: 26, calendar)
         XCTAssertEqual(Day.Name(date: date), Day.Name.friday)
-        let day = Day(date: date, membership: .current(.withinRange), calendar: calendar)
+        let day = Day(date: date, membership: .current(true), calendar: calendar)
         checkCalendarUnit(day, calendar)
         checkAccessibilityIdentifier(day, calendar)
     }
@@ -130,7 +130,7 @@ final class DayTests: XCTestCase {
         let calendar = Calendar.current
         let date = Date(year: 2019, month: 4, day: 27, calendar)
         XCTAssertEqual(Day.Name(date: date), Day.Name.saturday)
-        let day = Day(date: date, membership: .current(.withinRange), calendar: calendar)
+        let day = Day(date: date, membership: .current(true), calendar: calendar)
         checkCalendarUnit(day, calendar)
         checkAccessibilityIdentifier(day, calendar)
     }
@@ -152,7 +152,7 @@ final class DayTests: XCTestCase {
         let calendar = Calendar.current
         let date = Date(year: 2019, month: 4, day: 28, calendar)
         XCTAssertEqual(Day.Name(date: date), Day.Name.sunday)
-        let day = Day(date: date, membership: .current(.withinRange), calendar: calendar)
+        let day = Day(date: date, membership: .current(true), calendar: calendar)
         checkCalendarUnit(day, calendar)
         checkAccessibilityIdentifier(day, calendar)
     }

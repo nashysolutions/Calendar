@@ -16,14 +16,25 @@ public final class Day {
         return "\(components.month!).\(components.day!)"
     }
     
-    let membership: Month.Membership
+    let monthMembership: Month.Membership
     
     lazy var name = Day.Name(date: date)
         
     init(date: Date, membership: Month.Membership, calendar: Calendar) {
         self.date = date
-        self.membership = membership
+        self.monthMembership = membership
         self.calendar = calendar
+    }
+    
+    var state: DayButtonState {
+        switch monthMembership {
+        case .current(let isWithinRange):
+            return isWithinRange ? .normal : .disabled
+        case .next(let isWithinRange):
+            return isWithinRange ? .spacer : .invisible
+        case .previous(let isWithinRange):
+            return isWithinRange ? .spacer : .invisible
+        }
     }
 }
 

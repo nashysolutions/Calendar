@@ -28,7 +28,7 @@ final class CalendarTests: XCTestCase {
             return XCTFail()
         }
         
-        let dayTypes: [DayUserInterfaceCandidate] = DayPosition.allCases.compactMap { position in
+        let dayTypes: [DayUserInterfaceCandidate] = DayButtonState.allCases.compactMap { position in
             if case .invisible = position {
                 return nil
             }
@@ -47,8 +47,8 @@ final class CalendarTests: XCTestCase {
                 XCTFail("Expecting UserInterface.Error. Actual \(error).")
             case .some(let unwrapped):
                 switch unwrapped {
-                case .missingDayType(at: let position):
-                    XCTAssertEqual(DayPosition.invisible, position)
+                case .missingDayType(for: let state):
+                    XCTAssertEqual(DayButtonState.invisible, state)
                 default:
                     XCTFail("Expecting UserInterface.Error.missingDayType. Actual \(error).")
                 }
@@ -82,7 +82,7 @@ final class CalendarTests: XCTestCase {
             return XCTFail()
         }
         
-        let dayTypes: [DayUserInterfaceCandidate] = DayPosition.allCases.compactMap { position in
+        let dayTypes: [DayUserInterfaceCandidate] = DayButtonState.allCases.compactMap { position in
             if case .normal = position {
                 return nil
             }
@@ -101,8 +101,8 @@ final class CalendarTests: XCTestCase {
                 XCTFail("Expecting UserInterface.Error. Actual \(error).")
             case .some(let unwrapped):
                 switch unwrapped {
-                case .missingDayType(at: let position):
-                    XCTAssertEqual(DayPosition.normal, position)
+                case .missingDayType(for: let state):
+                    XCTAssertEqual(DayButtonState.normal, state)
                 default:
                     XCTFail("Expecting UserInterface.Error.missingDayType. Actual \(error).")
                 }
@@ -135,7 +135,7 @@ final class CalendarTests: XCTestCase {
             return XCTFail()
         }
         
-        let dayTypes: [DayUserInterfaceCandidate] = DayPosition.allCases.compactMap { position in
+        let dayTypes: [DayUserInterfaceCandidate] = DayButtonState.allCases.compactMap { position in
             if case .disabled = position {
                 return nil
             }
@@ -154,8 +154,8 @@ final class CalendarTests: XCTestCase {
                 XCTFail("Expecting UserInterface.Error. Actual \(error).")
             case .some(let unwrapped):
                 switch unwrapped {
-                case .missingDayType(at: let position):
-                    XCTAssertEqual(DayPosition.disabled, position)
+                case .missingDayType(for: let state):
+                    XCTAssertEqual(DayButtonState.disabled, state)
                 default:
                     XCTFail("Expecting UserInterface.Error.missingDayType. Actual \(error).")
                 }
@@ -188,7 +188,7 @@ final class CalendarTests: XCTestCase {
             return XCTFail()
         }
         
-        let dayTypes: [DayUserInterfaceCandidate] = DayPosition.allCases.compactMap { position in
+        let dayTypes: [DayUserInterfaceCandidate] = DayButtonState.allCases.compactMap { position in
             if case .spacer = position {
                 return nil
             }
@@ -207,8 +207,8 @@ final class CalendarTests: XCTestCase {
                 XCTFail("Expecting UserInterface.Error. Actual \(error).")
             case .some(let unwrapped):
                 switch unwrapped {
-                case .missingDayType(at: let position):
-                    XCTAssertEqual(DayPosition.spacer, position)
+                case .missingDayType(for: let state):
+                    XCTAssertEqual(DayButtonState.spacer, state)
                 default:
                     XCTFail("Expecting UserInterface.Error.missingDayType. Actual \(error).")
                 }
@@ -223,7 +223,7 @@ final class CalendarTests: XCTestCase {
         let startDate = Date.distantPast
         let endDate = Date.distantFuture
         
-        let dayTypes: [DayUserInterfaceCandidate] = DayPosition.allCases.compactMap { position in
+        let dayTypes: [DayUserInterfaceCandidate] = DayButtonState.allCases.compactMap { position in
             SummerSnowflake.userInterface(for: position)
         }
         let titleTypes = TitlePosition.allCases.map { SummerSnowflake.userInterface(for: $0) }
@@ -263,7 +263,7 @@ final class CalendarTests: XCTestCase {
             return XCTFail()
         }
         
-        var dayTypes: [DayUserInterfaceCandidate] = DayPosition.allCases.map { SummerSnowflake.userInterface(for: $0) }
+        var dayTypes: [DayUserInterfaceCandidate] = DayButtonState.allCases.map { SummerSnowflake.userInterface(for: $0) }
         dayTypes.insert(SummerSnowflake.userInterface(for: .spacer), at: 0)
         let titleTypes = TitlePosition.allCases.map { SummerSnowflake.userInterface(for: $0) }
         let userInterface = UserInterface(dayTypes: dayTypes, titleTypes: titleTypes)
@@ -316,7 +316,7 @@ final class CalendarTests: XCTestCase {
             return XCTFail()
         }
         
-        var dayTypes: [DayUserInterfaceCandidate] = DayPosition.allCases.map { SummerSnowflake.userInterface(for: $0) }
+        var dayTypes: [DayUserInterfaceCandidate] = DayButtonState.allCases.map { SummerSnowflake.userInterface(for: $0) }
         dayTypes.insert(SummerSnowflake.userInterface(for: .disabled), at: 0)
         let titleTypes = TitlePosition.allCases.map { SummerSnowflake.userInterface(for: $0) }
         let userInterface = UserInterface(dayTypes: dayTypes, titleTypes: titleTypes)
@@ -368,7 +368,7 @@ final class CalendarTests: XCTestCase {
             return XCTFail()
         }
         
-        var dayTypes: [DayUserInterfaceCandidate] = DayPosition.allCases.map { SummerSnowflake.userInterface(for: $0) }
+        var dayTypes: [DayUserInterfaceCandidate] = DayButtonState.allCases.map { SummerSnowflake.userInterface(for: $0) }
         dayTypes.insert(SummerSnowflake.userInterface(for: .spacer), at: 0)
         let titleTypes = TitlePosition.allCases.map { SummerSnowflake.userInterface(for: $0) }
         let userInterface = UserInterface(dayTypes: dayTypes, titleTypes: titleTypes)
@@ -420,7 +420,7 @@ final class CalendarTests: XCTestCase {
             return XCTFail()
         }
         
-        var dayTypes: [DayUserInterfaceCandidate] = DayPosition.allCases.map { SummerSnowflake.userInterface(for: $0) }
+        var dayTypes: [DayUserInterfaceCandidate] = DayButtonState.allCases.map { SummerSnowflake.userInterface(for: $0) }
         dayTypes.insert(SummerSnowflake.userInterface(for: .normal), at: 0)
         let titleTypes = TitlePosition.allCases.map { SummerSnowflake.userInterface(for: $0) }
         let userInterface = UserInterface(dayTypes: dayTypes, titleTypes: titleTypes)
@@ -472,7 +472,7 @@ final class CalendarTests: XCTestCase {
             return XCTFail()
         }
         
-        let dayTypes: [DayUserInterfaceCandidate] = DayPosition.allCases.map { SummerSnowflake.userInterface(for: $0) }
+        let dayTypes: [DayUserInterfaceCandidate] = DayButtonState.allCases.map { SummerSnowflake.userInterface(for: $0) }
         let titleTypes: [TitleUserInterfaceCandidate] = TitlePosition.allCases.compactMap { position in
             if case .day = position {
                 return nil
@@ -526,7 +526,7 @@ final class CalendarTests: XCTestCase {
             return XCTFail()
         }
         
-        let dayTypes: [DayUserInterfaceCandidate] = DayPosition.allCases.map { SummerSnowflake.userInterface(for: $0) }
+        let dayTypes: [DayUserInterfaceCandidate] = DayButtonState.allCases.map { SummerSnowflake.userInterface(for: $0) }
         let titleTypes: [TitleUserInterfaceCandidate] = TitlePosition.allCases.compactMap { position in
             if case .month = position {
                 return nil
@@ -579,7 +579,7 @@ final class CalendarTests: XCTestCase {
             return XCTFail()
         }
         
-        let dayTypes: [DayUserInterfaceCandidate] = DayPosition.allCases.map { SummerSnowflake.userInterface(for: $0) }
+        let dayTypes: [DayUserInterfaceCandidate] = DayButtonState.allCases.map { SummerSnowflake.userInterface(for: $0) }
         var titleTypes = TitlePosition.allCases.map { SummerSnowflake.userInterface(for: $0) }
         titleTypes.insert(SummerSnowflake.userInterface(for: .day), at: 0)
         
@@ -633,7 +633,7 @@ final class CalendarTests: XCTestCase {
             return XCTFail()
         }
         
-        let dayTypes: [DayUserInterfaceCandidate] = DayPosition.allCases.map { SummerSnowflake.userInterface(for: $0) }
+        let dayTypes: [DayUserInterfaceCandidate] = DayButtonState.allCases.map { SummerSnowflake.userInterface(for: $0) }
         var titleTypes = TitlePosition.allCases.map { SummerSnowflake.userInterface(for: $0) }
         titleTypes.insert(SummerSnowflake.userInterface(for: .month), at: 0)
         
@@ -686,7 +686,7 @@ final class CalendarTests: XCTestCase {
             return XCTFail()
         }
         
-        let dayTypes = DayPosition.allCases.map { SummerSnowflake.userInterface(for: $0) }
+        let dayTypes = DayButtonState.allCases.map { SummerSnowflake.userInterface(for: $0) }
         let titleTypes = TitlePosition.allCases.map { SummerSnowflake.userInterface(for: $0) }
         let userInterface = UserInterface(dayTypes: dayTypes, titleTypes: titleTypes)
         
